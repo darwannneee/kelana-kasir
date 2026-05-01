@@ -81,6 +81,7 @@ export default function KasirPage() {
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [paymentAmount, setPaymentAmount] = useState("");
+  const [customerName, setCustomerName] = useState("");
   const [paymentError, setPaymentError] = useState("");
   const [loading, setLoading] = useState(false);
   const [cashierName, setCashierName] = useState("-");
@@ -88,6 +89,7 @@ export default function KasirPage() {
     orderNumber: string;
     createdAt: string;
     cashierName: string;
+    customerName: string;
     items: CartItem[];
     total: number;
     method: string;
@@ -182,7 +184,13 @@ export default function KasirPage() {
       unitPrice: c.product.price,
       note: c.note,
     }));
-    const result = await createOrder(items, paymentMethod, paymentMethod === "cash" ? paid : total);
+    const normalizedCustomerName = customerName.trim() || "Umum";
+    const result = await createOrder(
+      items,
+      paymentMethod,
+      paymentMethod === "cash" ? paid : total,
+      normalizedCustomerName
+    );
     if (result.error) {
       setPaymentError(result.error);
     }
@@ -191,6 +199,7 @@ export default function KasirPage() {
         orderNumber: result.order.order_number,
         createdAt: result.order.created_at,
         cashierName,
+        customerName: result.order.customer_name || normalizedCustomerName,
         items: [...cart],
         total,
         method: paymentMethod,
@@ -200,6 +209,7 @@ export default function KasirPage() {
       setCart([]);
       setPaymentOpen(false);
       setPaymentAmount("");
+      setCustomerName("");
       await loadProducts();
     }
     setLoading(false);
@@ -385,6 +395,7 @@ export default function KasirPage() {
 
             <div class="row"><span>No Order</span><strong>${escapeHtml(struk.orderNumber)}</strong></div>
             <div class="row"><span>Tanggal</span><strong>${receiptDate}</strong></div>
+            <div class="row"><span>Pemesan</span><strong>${escapeHtml(struk.customerName)}</strong></div>
             <div class="row"><span>Kasir</span><strong>${escapeHtml(struk.cashierName)}</strong></div>
             <div class="row"><span>Metode</span><strong>${paymentLabels[struk.method] || struk.method}</strong></div>
             <div class="row"><span>Total Item</span><strong>${itemCount}</strong></div>
@@ -418,6 +429,7 @@ export default function KasirPage() {
 
             <div class="row"><span>No Order</span><strong>${escapeHtml(struk.orderNumber)}</strong></div>
             <div class="row"><span>Waktu</span><strong>${receiptDate}</strong></div>
+            <div class="row"><span>Pemesan</span><strong>${escapeHtml(struk.customerName)}</strong></div>
             <div class="row"><span>Kasir</span><strong>${escapeHtml(struk.cashierName)}</strong></div>
             <div class="row"><span>Total Item</span><strong>${itemCount}</strong></div>
 
@@ -694,6 +706,19 @@ export default function KasirPage() {
           </div>
 
           <div>
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-zinc-500">
+              Nama Pemesan
+            </label>
+            <input
+              type="text"
+              value={customerName}
+              onChange={(event) => setCustomerName(event.target.value)}
+              placeholder="Contoh: Budi / Meja 4"
+              className="h-11 w-full rounded-lg border border-zinc-200 px-3 text-sm font-semibold text-zinc-950 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10"
+            />
+          </div>
+
+          <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Metode Bayar</p>
             <div className="grid grid-cols-3 gap-2">
               {[
@@ -795,6 +820,7 @@ export default function KasirPage() {
           <div id="struk-print" className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 font-mono text-sm">
             <p className="mb-0.5 text-center text-base font-bold">KelanaRasa</p>
             <p className="mb-1 text-center text-xs text-zinc-400">{formatReceiptDate(struk.createdAt)}</p>
+            <p className="mb-1 text-center text-xs text-zinc-400">Pemesan: {struk.customerName}</p>
             <p className="mb-3 text-center text-xs text-zinc-400">Kasir: {struk.cashierName}</p>
             <p className="mb-2 text-[11px] text-zinc-400">No: {struk.orderNumber}</p>
             <hr className="my-2 border-dashed border-zinc-300" />

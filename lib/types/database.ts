@@ -33,6 +33,7 @@ export interface Order {
   id: string;
   order_number: string;
   cashier_id: string;
+  customer_name: string | null;
   total_amount: number;
   payment_method: PaymentMethod;
   payment_amount: number;

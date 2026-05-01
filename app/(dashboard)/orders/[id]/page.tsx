@@ -45,6 +45,10 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
         <div className="mb-6 grid gap-4 text-sm sm:grid-cols-2">
           <div>
+            <p className="text-[11px] uppercase tracking-wide font-semibold text-zinc-400">Pemesan</p>
+            <p className="mt-1 font-semibold text-zinc-950">{order.customer_name || "Umum"}</p>
+          </div>
+          <div>
             <p className="text-[11px] uppercase tracking-wide font-semibold text-zinc-400">Tanggal</p>
             <p className="mt-1 font-semibold text-zinc-950">{formatDateTime(order.created_at)}</p>
           </div>

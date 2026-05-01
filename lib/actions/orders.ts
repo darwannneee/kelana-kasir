@@ -11,7 +11,8 @@ export async function createOrder(
     note?: string;
   }>,
   paymentMethod: string,
-  paymentAmount: number
+  paymentAmount: number,
+  customerName?: string
 ) {
   const auth = await requireActiveAction();
   if (auth.error || !auth.user) return { error: auth.error ?? "Tidak terautentikasi" };
@@ -22,6 +23,7 @@ export async function createOrder(
     0
   );
   const change = paymentAmount - total;
+  const normalizedCustomerName = customerName?.trim() || "Umum";
 
   function getJakartaBusinessDay() {
     const parts = new Intl.DateTimeFormat("en-CA", {
@@ -61,6 +63,7 @@ export async function createOrder(
       .insert({
         order_number: orderNumber,
         cashier_id: user.id,
+        customer_name: normalizedCustomerName,
         total_amount: total,
         payment_method: paymentMethod,
         payment_amount: paymentAmount,

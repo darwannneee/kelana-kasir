@@ -13,6 +13,7 @@ type PrintableOrderItem = {
 
 type PrintableOrder = {
   order_number: string;
+  customer_name?: string | null;
   total_amount: number;
   payment_method: string;
   payment_amount: number;
@@ -52,6 +53,7 @@ export default function RecentOrderPrintButton({ order }: { order: PrintableOrde
     const items = order.order_items || [];
     const receiptDate = formatReceiptDate(order.created_at);
     const cashierName = order.cashier?.full_name || "-";
+    const customerName = order.customer_name?.trim() || "Umum";
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
     const customerRows = items
@@ -153,6 +155,7 @@ export default function RecentOrderPrintButton({ order }: { order: PrintableOrde
             <hr class="divider" />
             <div class="row"><span>No Order</span><strong>${escapeHtml(order.order_number)}</strong></div>
             <div class="row"><span>Tanggal</span><strong>${receiptDate}</strong></div>
+            <div class="row"><span>Pemesan</span><strong>${escapeHtml(customerName)}</strong></div>
             <div class="row"><span>Kasir</span><strong>${escapeHtml(cashierName)}</strong></div>
             <div class="row"><span>Metode</span><strong>${paymentLabels[order.payment_method] || order.payment_method}</strong></div>
             <div class="row"><span>Total Item</span><strong>${itemCount}</strong></div>
@@ -175,6 +178,7 @@ export default function RecentOrderPrintButton({ order }: { order: PrintableOrde
             <hr class="divider" />
             <div class="row"><span>No Order</span><strong>${escapeHtml(order.order_number)}</strong></div>
             <div class="row"><span>Waktu</span><strong>${receiptDate}</strong></div>
+            <div class="row"><span>Pemesan</span><strong>${escapeHtml(customerName)}</strong></div>
             <div class="row"><span>Kasir</span><strong>${escapeHtml(cashierName)}</strong></div>
             <div class="row"><span>Total Item</span><strong>${itemCount}</strong></div>
             <hr class="divider" />

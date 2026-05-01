@@ -32,10 +32,11 @@ export default async function OrdersPage() {
           </div>
         </div>
         <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] text-sm">
+        <table className="w-full min-w-[980px] text-sm">
           <thead>
             <tr className="border-b border-zinc-200 bg-zinc-50/70">
               <th className="px-5 py-3 text-left text-[11px] font-semibold text-zinc-500 uppercase tracking-wide">No. Order</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-zinc-500 uppercase tracking-wide">Pemesan</th>
               <th className="px-5 py-3 text-left text-[11px] font-semibold text-zinc-500 uppercase tracking-wide">Tanggal</th>
               <th className="px-5 py-3 text-left text-[11px] font-semibold text-zinc-500 uppercase tracking-wide">Kasir</th>
               <th className="px-5 py-3 text-right text-[11px] font-semibold text-zinc-500 uppercase tracking-wide">Total</th>
@@ -48,6 +49,7 @@ export default async function OrdersPage() {
             {orders && orders.length > 0 ? orders.map((order) => (
               <tr key={order.id} className="hover:bg-zinc-50/60 transition-colors">
                 <td className="px-5 py-3.5 font-mono text-xs font-semibold text-emerald-700">{order.order_number}</td>
+                <td className="px-5 py-3.5 text-xs font-bold text-zinc-800">{order.customer_name || "Umum"}</td>
                 <td className="px-5 py-3.5 text-zinc-500 text-xs">{formatDateTime(order.created_at)}</td>
                 <td className="px-5 py-3.5 text-zinc-700 text-xs">{order.cashier?.full_name || <span className="text-zinc-300">—</span>}</td>
                 <td className="px-5 py-3.5 text-right font-semibold text-zinc-900 tabular">{formatRupiah(order.total_amount)}</td>
@@ -67,7 +69,7 @@ export default async function OrdersPage() {
               </tr>
             )) : (
               <tr>
-                <td colSpan={7} className="px-6 py-16 text-center">
+                <td colSpan={8} className="px-6 py-16 text-center">
                   <div className="flex flex-col items-center gap-2">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-zinc-100">
                       <ClipboardList className="h-5 w-5 text-zinc-400" />

@@ -19,6 +19,7 @@ type RecentOrderItem = {
 type RecentOrder = {
   id: string;
   order_number: string;
+  customer_name?: string | null;
   total_amount: number;
   payment_method: string;
   payment_amount: number;
@@ -104,6 +105,7 @@ export default async function RecentKasirOrdersPage() {
                 <div>
                   <p className="font-mono text-xs font-bold text-emerald-700">{order.order_number}</p>
                   <p className="mt-1 text-xs font-medium text-zinc-500">{formatDateTime(order.created_at)}</p>
+                  <p className="mt-1 text-xs font-bold text-zinc-700">Pemesan: {order.customer_name || "Umum"}</p>
                   {profile.role === "owner" && (
                     <p className="mt-1 text-xs font-medium text-zinc-400">Kasir: {order.cashier?.full_name || "-"}</p>
                   )}
